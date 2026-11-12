@@ -6,6 +6,11 @@ on:
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
+    inputs:
+      release:
+        description: "Publish a GitHub Release tagged v<package.json version> (main only)"
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -58,6 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       zip: ${{ steps.pack.outputs.zip }}
+      version: ${{ steps.pack.outputs.version }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -76,6 +82,7 @@ jobs:
         run: |
           zip_path=$(./scripts/package.sh)
           echo "zip=$(basename "$zip_path")" >> "$GITHUB_OUTPUT"
+          echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.pack.outputs.zip }}
@@ -85,7 +92,11 @@ jobs:
 
   release:
     name: GitHub Release
-    if: startsWith(github.ref, 'refs/tags/v')
+    # Either a pushed v* tag, or "Run workflow" on main with "release" ticked
+    # (that path creates the v<version> tag itself).
+    if: >-
+      startsWith(github.ref, 'refs/tags/v') ||
+      (github.event_name == 'workflow_dispatch' && inputs.release && github.ref == 'refs/heads/main')
     needs: package
     runs-on: ubuntu-latest
     permissions:
@@ -98,9 +109,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           ZIP: ${{ needs.package.outputs.zip }}
+          VERSION: ${{ needs.package.outputs.version }}
         run: |
-          gh release create "$GITHUB_REF_NAME" "$ZIP" \
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            tag="$GITHUB_REF_NAME"
+          else
+            tag="v$VERSION"
+            if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+              echo "::error::Release $tag already exists. Bump version in package.json first."
+              exit 1
+            fi
+          fi
+          gh release create "$tag" "$ZIP" \
             --repo "$GITHUB_REPOSITORY" \
-            --title "Decky Builds $GITHUB_REF_NAME" \
+            --target "$GITHUB_SHA" \
+            --title "Decky Builds $tag" \
             --generate-notes \
-            $([[ "$GITHUB_REF_NAME" == *-* ]] && echo --prerelease)
+            $([[ "$tag" == *-* ]] && echo --prerelease)
