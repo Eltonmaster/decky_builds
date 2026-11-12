@@ -43,7 +43,7 @@ To publish a release, bump `version` in `package.json`, merge, then push a match
 git tag v0.1.0 && git push origin v0.1.0
 ```
 
-The workflow then creates a GitHub Release for the tag with the ZIP attached. Tags with a hyphen (`v0.2.0-beta.1`) become pre-releases. A tag that does not match `package.json` fails the build.
+The workflow then creates a GitHub Release for the tag with the ZIP attached. Instead of pushing a tag you can also open Actions → CI → **Run workflow** on `main` and tick **release**; that creates the `v<version>` tag and release from `package.json`'s version. Tags with a hyphen (`v0.2.0-beta.1`) become pre-releases. A tag that does not match `package.json` fails the build.
 
 ## Installing on the Deck
 
