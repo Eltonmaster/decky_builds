@@ -1,0 +1,305 @@
+{
+  "format": "decky-builds.guide",
+  "version": 1,
+  "id": "er-bleed-samurai",
+  "title": "Bleed Samurai",
+  "game": {
+    "appid": 1245620,
+    "name": "ELDEN RING"
+  },
+  "author": "Felix",
+  "updated": "2026-11-02",
+  "tags": [
+    "build",
+    "dexterity",
+    "arcane",
+    "pve"
+  ],
+  "summary": "Dual-katana bleed build from a Samurai start. Strong from the early game and peaks around rune level 125.",
+  "sections": [
+    {
+      "id": "overview",
+      "title": "Overview",
+      "blocks": [
+        {
+          "type": "stats",
+          "items": [
+            {
+              "label": "Start class",
+              "value": "Samurai"
+            },
+            {
+              "label": "Target level",
+              "value": "RL 125"
+            },
+            {
+              "label": "Main stats",
+              "value": "DEX / ARC"
+            },
+            {
+              "label": "Difficulty",
+              "value": "Easy"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": [
+            "Stack ",
+            {
+              "b": "blood loss"
+            },
+            " on fast weapons. Every proc deals a share of the enemy's max HP, so the build stays strong against bosses with large health pools."
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Two-hand early",
+          "text": [
+            "Until you own a second katana, two-hand the Uchigatana with ",
+            {
+              "btn": "Y"
+            },
+            " + ",
+            {
+              "btn": "R1"
+            },
+            ". The extra Strength scaling makes up for the missing offhand."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stats",
+      "title": "Stat plan",
+      "blocks": [
+        {
+          "type": "text",
+          "text": [
+            "Level ",
+            {
+              "b": "Vigor"
+            },
+            " first. Below 40 Vigor, most late-game bosses can kill you in two hits."
+          ]
+        },
+        {
+          "type": "table",
+          "caption": "Stat targets by rune level",
+          "stickyFirstColumn": true,
+          "columns": [
+            {
+              "label": "Stat"
+            },
+            {
+              "label": "Start",
+              "align": "right"
+            },
+            {
+              "label": "RL 60",
+              "align": "right"
+            },
+            {
+              "label": "RL 100",
+              "align": "right"
+            },
+            {
+              "label": "RL 125",
+              "align": "right"
+            }
+          ],
+          "rows": [
+            [
+              "Vigor",
+              12,
+              35,
+              45,
+              50
+            ],
+            [
+              "Mind",
+              11,
+              12,
+              15,
+              15
+            ],
+            [
+              "Endurance",
+              13,
+              15,
+              20,
+              25
+            ],
+            [
+              "Strength",
+              12,
+              12,
+              14,
+              16
+            ],
+            [
+              "Dexterity",
+              15,
+              33,
+              40,
+              40
+            ],
+            [
+              "Intelligence",
+              9,
+              9,
+              9,
+              9
+            ],
+            [
+              "Faith",
+              8,
+              8,
+              8,
+              8
+            ],
+            [
+              "Arcane",
+              8,
+              15,
+              28,
+              41
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "note",
+          "title": "Rivers of Blood requirements",
+          "text": [
+            "Needs ",
+            {
+              "hl": "12 STR · 18 DEX · 20 ARC"
+            },
+            ". The RL 100 column already covers it."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gear",
+      "title": "Equipment",
+      "blocks": [
+        {
+          "type": "table",
+          "caption": "Weapons",
+          "columns": [
+            {
+              "label": "Slot"
+            },
+            {
+              "label": "Item"
+            },
+            {
+              "label": "Where to find"
+            }
+          ],
+          "rows": [
+            [
+              "Right hand",
+              "Uchigatana",
+              "Samurai starting weapon"
+            ],
+            [
+              "Left hand",
+              "Nagakiba",
+              "Bloody Finger Hunter Yura's questline"
+            ],
+            [
+              "Right hand (late)",
+              "Rivers of Blood",
+              "Bloody Finger Okina, Church of Repose (Mountaintops of the Giants)"
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Talismans"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            [
+              {
+                "b": "Lord of Blood's Exultation"
+              },
+              ": attack up when blood loss happens nearby"
+            ],
+            [
+              {
+                "b": "Rotten Winged Sword Insignia"
+              },
+              ": attack up with successive hits"
+            ],
+            [
+              {
+                "b": "Shard of Alexander"
+              },
+              ": stronger Ash of War skills"
+            ],
+            [
+              {
+                "b": "Millicent's Prosthesis"
+              },
+              ": +5 Dexterity and successive-hit bonus"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "route",
+      "title": "Route",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "Tick these off as you go. Progress is saved on the Deck."
+        },
+        {
+          "type": "checklist",
+          "id": "route",
+          "items": [
+            {
+              "id": "twohand",
+              "text": "Two-hand the Uchigatana until about RL 40"
+            },
+            {
+              "id": "vig30",
+              "text": "Reach 30 Vigor before Stormveil Castle"
+            },
+            {
+              "id": "naga",
+              "text": [
+                "Get the ",
+                {
+                  "b": "Nagakiba"
+                },
+                " from Yura's questline"
+              ]
+            },
+            {
+              "id": "rob",
+              "text": [
+                "Reach 20 Arcane and claim ",
+                {
+                  "b": "Rivers of Blood"
+                }
+              ]
+            },
+            {
+              "id": "lobe",
+              "text": "Equip Lord of Blood's Exultation"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
