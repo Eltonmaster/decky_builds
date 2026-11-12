@@ -31,7 +31,25 @@ pnpm test           # frontend unit tests (vitest)
 python3 -m unittest discover -s tests   # backend tests
 ```
 
-Package and install it the usual Decky way (for example with the Decky CLI, or by copying `dist/`, `main.py`, `py_modules/`, `defaults/`, `plugin.json` and `package.json` into `~/homebrew/plugins/Decky Builds/` on the Deck).
+`./scripts/package.sh` (after `pnpm build`) writes an installable `out/decky-builds-<version>.zip`.
+
+## CI and releases
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request and push to `main`: type-check, frontend tests, build, and the backend tests on Python 3.11 and 3.13. If those pass it packages the plugin ZIP and attaches it to the run as an artifact (Actions → the run → Artifacts).
+
+To publish a release, bump `version` in `package.json`, merge, then push a matching tag:
+
+```sh
+git tag v0.1.0 && git push origin v0.1.0
+```
+
+The workflow then creates a GitHub Release for the tag with the ZIP attached. Tags with a hyphen (`v0.2.0-beta.1`) become pre-releases. A tag that does not match `package.json` fails the build.
+
+## Installing on the Deck
+
+1. In Decky (Quick Access → Decky → gear icon) open **General** and turn on **Developer mode**. A **Developer** tab appears.
+2. Either download the ZIP onto the Deck (Desktop mode) and use **Developer → Install Plugin from ZIP File**, or copy the ZIP's link from the GitHub Release and use **Install Plugin from URL**.
+3. Confirm the install prompt. Decky Builds shows up in the Decky plugin list. Installing a newer ZIP replaces the old version; your guides are kept in Decky's plugin data folder.
 
 ## Browser preview
 
