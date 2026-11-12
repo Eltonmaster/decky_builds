@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decky Builds upload</title>
+<style>
+:root{--bg:#f3f5f8;--surface:#fff;--fg:#141a22;--muted:#5a6575;--line:#d5dbe4;--accent:#0f7bd8;--good:#11804a;--bad:#c62f2f;--soft:#e8f1fb;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1318;--surface:#171c23;--fg:#e7ebf0;--muted:#97a2b2;--line:#2a313c;--accent:#4aa8ff;--good:#5bd17a;--bad:#ff6b6b;--soft:#16283b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:720px;margin:0 auto;padding:40px 16px 64px;display:flex;flex-direction:column;gap:20px}
+h1{margin:0;font-size:28px;line-height:1.2}
+p{margin:0}
+.muted{color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px}
+label{font-weight:600}
+.code-row{display:flex;gap:10px;flex-wrap:wrap}
+input[type=text]{font:500 24px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.2em;width:11ch;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px}
+button{font:600 15px system-ui,sans-serif;padding:10px 18px;border-radius:8px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+.state{font-size:14px}
+.state.ok{color:var(--good)} .state.bad{color:var(--bad)}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:36px 16px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
+.drop.over{border-color:var(--accent);background:var(--soft)}
+.drop[aria-disabled=true]{opacity:.5;cursor:not-allowed}
+.drop strong{display:block;font-size:17px;margin-bottom:4px}
+ul.results{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.res{border:1px solid var(--line);border-left-width:4px;border-radius:8px;padding:10px 14px;background:var(--surface)}
+.res.ok{border-left-color:var(--good)} .res.bad{border-left-color:var(--bad)} .res.wait{border-left-color:var(--muted)}
+.res b{word-break:break-all}
+.res ol{margin:6px 0 0;padding-left:20px}
+.res code{font:13px ui-monospace,Menlo,Consolas,monospace;background:var(--bg);padding:1px 5px;border-radius:4px;word-break:break-all}
+</style>
+</head>
+<body>
+<main>
+  <div>
+    <h1>Decky Builds</h1>
+    <p class="muted">Send guide files (.json, up to 1 MB each) to your Steam Deck.</p>
+  </div>
+
+  <section class="card">
+    <label for="code">Pairing code</label>
+    <p class="muted">Shown in the Decky Builds panel on your Deck under “Accept file uploads”.</p>
+    <div class="code-row">
+      <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="000000">
+      <button id="pair" type="button">Connect</button>
+    </div>
+    <p id="state" class="state" role="status"></p>
+  </section>
+
+  <section class="card">
+    <div id="drop" class="drop" tabindex="0" role="button" aria-disabled="true">
+      <strong>Drop guide files here</strong>
+      <span class="muted">or click to choose files</span>
+    </div>
+    <input id="file" type="file" accept=".json,application/json" multiple hidden>
+    <ul id="results" class="results" aria-live="polite"></ul>
+  </section>
+</main>
+<script>
+(function(){
+  var codeEl=document.getElementById('code'), stateEl=document.getElementById('state'),
+      drop=document.getElementById('drop'), fileEl=document.getElementById('file'),
+      results=document.getElementById('results'), pairBtn=document.getElementById('pair');
+  var paired=false;
+
+  function code(){return codeEl.value.replace(/\D/g,'');}
+  function setState(text,cls){stateEl.textContent=text;stateEl.className='state '+(cls||'');}
+  function enable(on){paired=on;drop.setAttribute('aria-disabled',on?'false':'true');}
+
+  function pair(){
+    if(code().length!==6){setState('Enter the 6-digit code.','bad');return;}
+    pairBtn.disabled=true;
+    fetch('/api/pair',{method:'POST',headers:{'X-Pairing-Code':code()}}).then(function(r){
+      return r.json().catch(function(){return {};}).then(function(j){
+        if(r.ok){enable(true);setState('Connected. You can send files now.','ok');}
+        else{enable(false);setState(j.error||('Error '+r.status),'bad');}
+      });
+    }).catch(function(){setState('Could not reach the Deck. Is “Accept file uploads” still on?','bad');})
+      .then(function(){pairBtn.disabled=false;});
+  }
+  pairBtn.addEventListener('click',pair);
+  codeEl.addEventListener('keydown',function(e){if(e.key==='Enter')pair();});
+  codeEl.addEventListener('input',function(){enable(false);setState('');if(code().length===6)pair();});
+
+  function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+
+  function upload(file){
+    var li=el('li','res wait'); li.appendChild(el('b',null,file.name));
+    var msg=el('div','muted','Sending…'); li.appendChild(msg); results.insertBefore(li,results.firstChild);
+    if(!/\.json$/i.test(file.name)){li.className='res bad';msg.textContent='Only .json files are accepted.';return;}
+    if(file.size>1024*1024){li.className='res bad';msg.textContent='This file is larger than 1 MB.';return;}
+    file.arrayBuffer().then(function(buf){
+      return fetch('/api/upload',{method:'POST',body:buf,headers:{
+        'Content-Type':'application/json','X-Pairing-Code':code(),'X-Filename':encodeURIComponent(file.name)}});
+    }).then(function(r){
+      return r.json().catch(function(){return {};}).then(function(j){
+        if(r.ok&&j.ok){li.className='res ok';
+          msg.textContent=(j.replaced?'Updated: ':'Added: ')+(j.game_name||'')+(j.title?' · '+j.title:'');return;}
+        li.className='res bad';
+        if(r.status===401||r.status===429){enable(false);setState(j.error||'Pairing lost.','bad');}
+        if(j.errors&&j.errors.length){
+          msg.textContent='Rejected. '+(j.errors.length===1?'1 problem:':j.errors.length+' problems:');
+          var ol=el('ol');
+          j.errors.forEach(function(e){var item=el('li');
+            if(e.path){item.appendChild(el('code',null,e.path));item.appendChild(document.createTextNode(' '));}
+            item.appendChild(document.createTextNode(e.message));ol.appendChild(item);});
+          li.appendChild(ol);
+        } else msg.textContent=j.error||('Error '+r.status);
+      });
+    }).catch(function(){li.className='res bad';msg.textContent='Could not reach the Deck. Is “Accept file uploads” still on?';});
+  }
+  function handle(files){
+    if(!paired){setState('Enter the pairing code first.','bad');codeEl.focus();return;}
+    Array.prototype.forEach.call(files,upload);
+  }
+
+  drop.addEventListener('click',function(){if(paired)fileEl.click();else handle([]);});
+  drop.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();drop.click();}});
+  fileEl.addEventListener('change',function(){handle(fileEl.files);fileEl.value='';});
+  ['dragenter','dragover'].forEach(function(t){drop.addEventListener(t,function(e){e.preventDefault();drop.classList.add('over');});});
+  ['dragleave','drop'].forEach(function(t){drop.addEventListener(t,function(e){e.preventDefault();drop.classList.remove('over');});});
+  drop.addEventListener('drop',function(e){handle(e.dataTransfer.files);});
+  window.addEventListener('dragover',function(e){e.preventDefault();});
+  window.addEventListener('drop',function(e){e.preventDefault();});
+  codeEl.focus();
+})();
+</script>
+</body>
+</html>
