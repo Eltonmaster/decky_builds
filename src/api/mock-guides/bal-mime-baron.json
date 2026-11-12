@@ -1,0 +1,88 @@
+{
+  "format": "decky-builds.guide",
+  "version": 1,
+  "id": "bal-mime-baron",
+  "title": "Mime + Baron",
+  "game": {
+    "appid": 2379780,
+    "name": "Balatro"
+  },
+  "author": "Felix",
+  "updated": "2026-11-12",
+  "tags": [
+    "deck",
+    "jokers",
+    "kings"
+  ],
+  "summary": "Hold Kings in hand and retrigger them for huge multipliers.",
+  "sections": [
+    {
+      "id": "core",
+      "title": "Core jokers",
+      "blocks": [
+        {
+          "type": "text",
+          "text": [
+            "The engine is ",
+            {
+              "b": "Baron"
+            },
+            " plus ",
+            {
+              "b": "Mime"
+            },
+            ". Keep Kings in hand and play small hands to score with them."
+          ]
+        },
+        {
+          "type": "table",
+          "caption": "Jokers to look for",
+          "columns": [
+            {
+              "label": "Joker"
+            },
+            {
+              "label": "Rarity"
+            },
+            {
+              "label": "Effect"
+            }
+          ],
+          "rows": [
+            [
+              "Baron",
+              "Rare",
+              "Each King held in hand gives X1.5 Mult"
+            ],
+            [
+              "Mime",
+              "Uncommon",
+              "Retrigger all held-in-hand abilities"
+            ],
+            [
+              "Blueprint",
+              "Rare",
+              "Copies the ability of the Joker to the right"
+            ],
+            [
+              "Brainstorm",
+              "Rare",
+              "Copies the ability of the leftmost Joker"
+            ],
+            [
+              "Shoot the Moon",
+              "Common",
+              "+13 Mult for each Queen held in hand"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Steel Kings",
+          "text": "Steel cards give X1.5 Mult while held, which stacks with Baron."
+        }
+      ]
+    }
+  ]
+}

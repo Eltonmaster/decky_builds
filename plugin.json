@@ -1,0 +1,11 @@
+{
+  "name": "Decky Builds",
+  "author": "Felix",
+  "flags": [],
+  "api_version": 1,
+  "publish": {
+    "tags": ["guides", "builds", "utility"],
+    "description": "Upload game guides and build sheets as JSON and read them with the controller, right next to the game.",
+    "image": "https://opengraph.githubassets.com/1/SteamDeckHomebrew/PluginLoader"
+  }
+}

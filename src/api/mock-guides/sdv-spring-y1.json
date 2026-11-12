@@ -1,0 +1,223 @@
+{
+  "format": "decky-builds.guide",
+  "version": 1,
+  "id": "sdv-spring-y1",
+  "title": "Spring, Year 1",
+  "game": {
+    "appid": 413150,
+    "name": "Stardew Valley"
+  },
+  "author": "Felix",
+  "updated": "2026-10-28",
+  "tags": [
+    "planner",
+    "farming",
+    "checklist"
+  ],
+  "summary": "What to plant and do in your first spring so the Spring Crops bundle is done before summer.",
+  "sections": [
+    {
+      "id": "plan",
+      "title": "The plan",
+      "blocks": [
+        {
+          "type": "stats",
+          "items": [
+            {
+              "label": "Season",
+              "value": "Spring Y1"
+            },
+            {
+              "label": "Length",
+              "value": "28 days"
+            },
+            {
+              "label": "Goal",
+              "value": "Spring Crops bundle"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": [
+            "Plant one of each bundle crop early, then put the rest of your money into ",
+            {
+              "b": "Cauliflower"
+            },
+            " and ",
+            {
+              "b": "Potatoes"
+            },
+            ". Cycle the toolbar with ",
+            {
+              "btn": "L1"
+            },
+            " / ",
+            {
+              "btn": "R1"
+            },
+            "."
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Strawberries",
+          "text": [
+            "Strawberry seeds are only sold at the ",
+            {
+              "hl": "Egg Festival on Spring 13"
+            },
+            ". Save about 1,000g for it."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "crops",
+      "title": "Crops",
+      "blocks": [
+        {
+          "type": "table",
+          "caption": "Spring crops",
+          "stickyFirstColumn": true,
+          "columns": [
+            {
+              "label": "Crop"
+            },
+            {
+              "label": "Seed (g)",
+              "align": "right"
+            },
+            {
+              "label": "Sells (g)",
+              "align": "right"
+            },
+            {
+              "label": "Grows (days)",
+              "align": "right"
+            },
+            {
+              "label": "Regrows (days)",
+              "align": "right"
+            },
+            {
+              "label": "Seeds from"
+            },
+            {
+              "label": "Bundle"
+            }
+          ],
+          "rows": [
+            [
+              "Parsnip",
+              20,
+              35,
+              4,
+              "—",
+              "Pierre's",
+              "Spring Crops"
+            ],
+            [
+              "Green Bean",
+              60,
+              40,
+              10,
+              3,
+              "Pierre's",
+              "Spring Crops"
+            ],
+            [
+              "Cauliflower",
+              80,
+              175,
+              12,
+              "—",
+              "Pierre's",
+              "Spring Crops"
+            ],
+            [
+              "Potato",
+              50,
+              80,
+              6,
+              "—",
+              "Pierre's",
+              "Spring Crops"
+            ],
+            [
+              "Kale",
+              70,
+              110,
+              6,
+              "—",
+              "Pierre's",
+              "—"
+            ],
+            [
+              "Strawberry",
+              100,
+              120,
+              8,
+              4,
+              "Egg Festival",
+              "—"
+            ],
+            [
+              "Rhubarb",
+              100,
+              220,
+              13,
+              "—",
+              "Oasis",
+              "—"
+            ]
+          ]
+        },
+        {
+          "type": "text",
+          "text": [
+            "In a table, press ",
+            {
+              "btn": "X"
+            },
+            " to sort by the column you are on."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "week1",
+      "title": "First week",
+      "blocks": [
+        {
+          "type": "checklist",
+          "id": "week1",
+          "items": [
+            {
+              "id": "parsnips",
+              "text": "Plant the 15 starting parsnip seeds"
+            },
+            {
+              "id": "bundle",
+              "text": "Buy one of each Spring Crops bundle seed"
+            },
+            {
+              "id": "mines",
+              "text": "Visit the Mines once they open (Spring 5)"
+            },
+            {
+              "id": "egg",
+              "text": [
+                "Buy strawberry seeds at the ",
+                {
+                  "b": "Egg Festival"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
