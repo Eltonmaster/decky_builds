@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "decky-builds.guide/1",
+  "title": "Decky Builds guide, format version 1",
+  "description": "Editor help only. The plugin's own validator is the source of truth and also checks unique ids and table row lengths.",
+  "type": "object",
+  "required": ["format", "version", "id", "title", "game", "sections"],
+  "properties": {
+    "format": { "const": "decky-builds.guide" },
+    "version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" },
+    "title": { "type": "string", "minLength": 1 },
+    "game": {
+      "type": "object",
+      "required": ["appid", "name"],
+      "properties": {
+        "appid": { "type": "integer", "minimum": 1 },
+        "name": { "type": "string", "minLength": 1 }
+      }
+    },
+    "author": { "type": "string" },
+    "updated": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "summary": { "type": "string" },
+    "sections": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "blocks"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "blocks": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/block" } }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "span": {
+      "type": "object", "minProperties": 1, "maxProperties": 1, "additionalProperties": false,
+      "properties": {
+        "b": { "type": "string" },
+        "i": { "type": "string" },
+        "hl": { "type": "string" },
+        "btn": { "enum": ["A", "B", "X", "Y", "L1", "R1", "L2", "R2", "L4", "R4", "L5", "R5", "START", "SELECT", "DPAD"] }
+      }
+    },
+    "rich": {
+      "oneOf": [
+        { "type": "string" },
+        { "$ref": "#/$defs/span" },
+        { "type": "array", "minItems": 1, "items": { "oneOf": [{ "type": "string" }, { "$ref": "#/$defs/span" }] } }
+      ]
+    },
+    "block": {
+      "type": "object",
+      "required": ["type"],
+      "properties": { "type": { "enum": ["text", "heading", "list", "checklist", "table", "stats", "callout"] } },
+      "allOf": [
+        { "if": { "properties": { "type": { "enum": ["text", "heading"] } } },
+          "then": { "required": ["text"], "properties": { "text": { "$ref": "#/$defs/rich" } } } },
+        { "if": { "properties": { "type": { "const": "list" } } },
+          "then": { "required": ["items"], "properties": {
+            "style": { "enum": ["bullet", "number"] },
+            "items": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/rich" } } } } },
+        { "if": { "properties": { "type": { "const": "checklist" } } },
+          "then": { "required": ["id", "items"], "properties": {
+            "id": { "type": "string", "pattern": "^[^:]+$" },
+            "items": { "type": "array", "minItems": 1, "items": {
+              "type": "object", "required": ["id", "text"],
+              "properties": { "id": { "type": "string", "pattern": "^[^:]+$" }, "text": { "$ref": "#/$defs/rich" } } } } } } },
+        { "if": { "properties": { "type": { "const": "table" } } },
+          "then": { "required": ["columns", "rows"], "properties": {
+            "caption": { "type": "string" },
+            "stickyFirstColumn": { "type": "boolean" },
+            "columns": { "type": "array", "minItems": 1, "items": {
+              "type": "object", "required": ["label"],
+              "properties": { "label": { "type": "string" }, "align": { "enum": ["left", "right", "center"] } } } },
+            "rows": { "type": "array", "minItems": 1, "items": {
+              "type": "array", "items": { "oneOf": [{ "type": "number" }, { "$ref": "#/$defs/rich" }] } } } } } },
+        { "if": { "properties": { "type": { "const": "stats" } } },
+          "then": { "required": ["items"], "properties": {
+            "items": { "type": "array", "minItems": 1, "items": {
+              "type": "object", "required": ["label", "value"],
+              "properties": { "label": { "type": "string" }, "value": { "type": ["string", "number"] } } } } } } },
+        { "if": { "properties": { "type": { "const": "callout" } } },
+          "then": { "required": ["tone", "text"], "properties": {
+            "tone": { "enum": ["tip", "warning", "note"] },
+            "title": { "type": "string" },
+            "text": { "$ref": "#/$defs/rich" } } } }
+      ]
+    }
+  }
+}
